@@ -1,0 +1,30 @@
+<div class="card xs:col-12 md:col-6 mx-auto px-3 text-center">
+    <h1>Registration</h1>
+    <h3 class="mb-4">Please fill in the form below to create an account.</h3>
+    <!--primeng registration form-->
+    <div class="mb-5">
+        <p-floatlabel>
+            <input id="username" [(ngModel)]="user.name" pInputText class="w-full mb" />
+            <label for="username">Username</label>
+        </p-floatlabel>
+    </div>
+    <div class="mb-5">
+        <p-floatLabel>
+            <input pInputText id="email" [(ngModel)]="user.email" type="email" class="w-full" />
+            <label for="email">Email</label>
+        </p-floatLabel>
+    </div>
+    <div class="mb-5">
+        <p-floatLabel>
+            <p-password pInputText id="password" [(ngModel)]="user.password" type="password" class="w-full" [toggleMask]="true" [feedback]="false" />
+            <label for="password">Password</label>
+        </p-floatLabel>
+    </div>
+    <div class="mb-5">
+        <p-floatLabel>
+            <p-password pInputText id="confirm-password" [(ngModel)]="user.confirm" type="password" class="w-full" [toggleMask]="true" [feedback]="false" />
+            <label for="confirm-password">Confirm Password</label>
+        </p-floatLabel>
+    </div>
+    <button type="submit" pButton label="Register" (click)="save()"></button>
+</div>

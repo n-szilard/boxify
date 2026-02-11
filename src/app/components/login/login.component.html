@@ -1,0 +1,22 @@
+<div class="card xs:col-12 md:col-6 mx-auto px-3 text-center">
+    <h1>Login</h1>
+    <h3 class="mb-4">Please fill in the form below to login.</h3>
+    <!--primeng login form-->
+    <div class="mb-5">
+        <p-floatLabel>
+            <input pInputText id="email" [(ngModel)]="user.email" type="email" class="w-full" />
+            <label for="email">Email</label>
+        </p-floatLabel>
+    </div>
+    <div class="mb-3">
+        <p-floatLabel>
+            <p-password pInputText id="password" [(ngModel)]="user.password" type="password" class="w-full" [toggleMask]="true" [feedback]="false" />
+            <label for="password">Password</label>
+        </p-floatLabel>
+    </div>
+    <div class="mb-3">
+        <p-checkbox [(ngModel)]="rememberMe" inputId="rememberMe" [binary]="true" />
+        <label for="rememberMe" class="ml-2">Remember me</label>
+    </div>
+    <button type="submit" pButton label="Login" (click)="login()"></button>
+</div>
