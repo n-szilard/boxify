@@ -9,6 +9,7 @@ import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { CheckboxModule } from 'primeng/checkbox';
+import { MessageService } from 'primeng/api';
 
 
 @Component({
@@ -27,7 +28,6 @@ export class LoginComponent {
     email: '',
     password: '',
     role: '',
-    secret: '',
     reg: new Date(),
     status: false
   }
@@ -35,7 +35,8 @@ export class LoginComponent {
   constructor(
     private api: ApiService,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private message: MessageService
   ) {}
 
   login() {
@@ -45,12 +46,27 @@ export class LoginComponent {
     }
     this.api.login('users', data).subscribe({
       next: (res) => {
+        const userData: User = {
+          id: res.id,
+          name: res.name,
+          email: res.email,
+          role: res.role,
+          status: res.status
+        };
+
+        const token = res.token;
+
         if (this.rememberMe) {
-          this.auth.storeUser(res as any);
+          this.auth.storeUser(token, userData);
         }
-        this.auth.login(res as any);
-        alert('Sikeres belépés');
-        this.router.navigateByUrl('/home');
+        this.auth.login(token, userData);
+        this.message.add({
+          severity: 'success',
+          summary: 'Info',
+          detail: 'Sikeres belépés',
+          life: 3000
+        });
+        this.router.navigateByUrl('/dashboard');
       },
       error: (err) => {
         console.error(err);

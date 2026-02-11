@@ -7,6 +7,7 @@ import { PasswordModule } from 'primeng/password';
 import { User } from '../../interfaces/user';
 import { ApiService } from '../../services/api.service';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-registration',
@@ -22,17 +23,17 @@ export class RegistrationComponent implements OnInit {
     email: '',
     password: '',
     role: '',
-    secret: '',
     reg: new Date(),
     status: true
   };
 
   constructor(
     private api: ApiService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private message: MessageService
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   save() {
     // name, email, password, confirm, phone, address
@@ -46,24 +47,60 @@ export class RegistrationComponent implements OnInit {
     };
 
     if (!data.name || !data.email || !data.password || !data.confirm) {
-      alert('Töltsd ki az összes kötelező mezőt.');
+      this.message.add({
+        severity: 'warn',
+        summary: 'Hiba',
+        detail: 'Kérem, tölsön ki minden kötelező mezőt.',
+        life: 5000
+      })
+      return;
+    }
+
+    if (!this.validateEmail(data.email)) {
+      this.message.add({
+        severity: 'warn',
+        summary: 'Hiba',
+        detail: 'Adjon meg egy megfelelő formátumú email címet!',
+        life: 5000
+      })
       return;
     }
 
     if (data.password !== data.confirm) {
-      alert('A jelszavak nem egyeznek');
+      this.message.add({
+        severity: 'warn',
+        summary: 'Hiba',
+        detail: 'A jelszavak nem egyeznek!',
+        life: 5000
+      })
       return;
     }
 
     this.api.registration('users', data).subscribe({
       next: (res) => {
-        alert('Sikeres regisztráció');
+        this.message.add({
+          severity: 'success',
+          summary: 'Info',
+          detail: 'Sikeres regisztráció',
+          life: 3000
+        });
         this.router.navigateByUrl('/login');
       },
       error: (err) => {
-        alert(err.error.error);
+        this.message.add({
+          severity: 'error',
+          summary: 'Hiba',
+          detail: 'Hiba a regisztráció során, próbálja újra később.',
+          life: 5000
+        })
         console.error('Registration failed:', err);
       }
     });
   }
+
+  validateEmail(email: string) {
+    let re = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+    return re.test(email);
+  }
 }
+

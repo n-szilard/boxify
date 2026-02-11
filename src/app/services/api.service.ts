@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { User } from '../interfaces/user';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class ApiService {
     private http: HttpClient
   ) { }
 
-  tokenHeader(): {headers: HttpHeaders} {
+  tokenHeader(): { headers: HttpHeaders } {
     let token = this.getToken();
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
     return { headers };
@@ -30,8 +32,8 @@ export class ApiService {
     return this.http.post(`${this.server}/${table}/registration`, data);
   }
 
-  login(table: string, data: object) {
-    return this.http.post(`${this.server}/${table}/login`, data);
+  login(table: string, data: object): Observable<User & { token: string }> {
+    return this.http.post<User & { token: string }>(`${this.server}/${table}/login`, data);
   }
 
   //lostpass() { }

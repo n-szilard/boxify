@@ -50,6 +50,11 @@ export class NavbarComponent implements OnInit {
       // isLoggedIn true
       ...this.isLoggedIn ? [
         {
+          label: 'Dashboard',
+          icon: 'pi pi-th-large',
+          routerLink: '/dashboard'
+        },
+        {
           label: 'Logout',
           icon: 'pi pi-sign-out',
           command: () => {

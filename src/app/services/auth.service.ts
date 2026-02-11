@@ -1,18 +1,29 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
 import { BehaviorSubject } from 'rxjs';
+import { User } from '../interfaces/user';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor() { }
+  constructor(private api: ApiService) { }
 
   private tokenName = environment.tokenName;
+  private userDataname = 'boxifyData'
 
   private isLoggedIn = new BehaviorSubject<boolean>(this.getToken());
   isLoggedIn$ = this.isLoggedIn.asObservable();
+
+  loggedUserData: User = {
+    id: '',
+    name: '',
+    email: '',
+    role: '',
+    status: false
+  }
 
   getToken() {
     const sess = sessionStorage.getItem(this.tokenName);
@@ -27,8 +38,10 @@ export class AuthService {
     return false;
   }
 
-  login(token: string) {
+  login(token: string, userData: User) {
     sessionStorage.setItem(this.tokenName, token);
+    sessionStorage.setItem(this.userDataname, JSON.stringify(userData))
+    this.loggedUserData = userData;
     this.isLoggedIn.next(true);
   }
 
@@ -39,15 +52,16 @@ export class AuthService {
   }
 
   loggedUser() {
-    const token = sessionStorage.getItem(this.tokenName);
-    if (token) {
-      return JSON.parse(token);
+    const userData = sessionStorage.getItem(this.userDataname);
+    if (userData) {
+      return JSON.parse(userData) as User;
     }
     return null;
   }
 
-  storeUser(token: string) {
+  storeUser(token: string, userData: User) {
     localStorage.setItem(this.tokenName, token);
+    localStorage.setItem(this.userDataname, JSON.stringify(userData));
   }
 
   isLoggedUser(): boolean {
