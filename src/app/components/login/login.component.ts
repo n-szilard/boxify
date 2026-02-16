@@ -69,8 +69,12 @@ export class LoginComponent {
         this.router.navigateByUrl('/dashboard');
       },
       error: (err) => {
-        console.error(err);
-        alert(err.error.error);
+        this.message.add({
+          severity: 'error',
+          summary: 'Hiba',
+          detail: err.error.error,
+          life: 5000
+        })
       }
     });
   }
