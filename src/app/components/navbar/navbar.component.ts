@@ -65,7 +65,7 @@ export class NavbarComponent implements OnInit {
         // isLoggedIn false
       ] : [
         {
-          label: 'Bejelenzkezés',
+          label: 'Bejelentkezés',
           icon: 'pi pi-user',
           routerLink: '/login'
         },
