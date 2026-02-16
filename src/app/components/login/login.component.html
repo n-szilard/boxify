@@ -9,10 +9,9 @@
         </p-floatLabel>
     </div>
     <div class="mb-3">
-        <p-floatLabel>
-            <p-password pInputText id="password" [(ngModel)]="user.password" type="password" class="w-full" [toggleMask]="true" [feedback]="false" />
-            <label for="password">Password</label>
-        </p-floatLabel>
+        <p-password id="password1" [(ngModel)]="user.password" type="password" class="w-full" [feedback]="false" placeholder="Password"
+            styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+            [inputStyle]="{'width':'100%'}" [toggleMask]="true"></p-password>
     </div>
     <div class="mb-3">
         <p-checkbox [(ngModel)]="rememberMe" inputId="rememberMe" [binary]="true" />

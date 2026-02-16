@@ -15,16 +15,14 @@
         </p-floatLabel>
     </div>
     <div class="mb-5">
-        <p-floatLabel>
-            <p-password pInputText id="password" [(ngModel)]="user.password" type="password" class="w-full" [toggleMask]="true" [feedback]="false" />
-            <label for="password">Password</label>
-        </p-floatLabel>
+        <p-password id="password1" [(ngModel)]="user.password" type="password" class="w-full" [feedback]="false" placeholder="Password"
+            styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+            [inputStyle]="{'width':'100%'}" [toggleMask]="true"></p-password>
     </div>
-    <div class="mb-5">
-        <p-floatLabel>
-            <p-password pInputText id="confirm-password" [(ngModel)]="user.confirm" type="password" class="w-full" [toggleMask]="true" [feedback]="false" />
-            <label for="confirm-password">Confirm Password</label>
-        </p-floatLabel>
+    <div class="mb-3">
+        <p-password id="password1" [(ngModel)]="user.confirm" type="password" class="w-full" [feedback]="false" placeholder="Confirm password"
+            styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
+            [inputStyle]="{'width':'100%'}" [toggleMask]="true"></p-password>
     </div>
     <button type="submit" pButton label="Register" (click)="save()"></button>
 </div>

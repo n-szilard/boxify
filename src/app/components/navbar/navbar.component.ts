@@ -45,7 +45,7 @@ export class NavbarComponent implements OnInit {
       {
         label: 'Home',
         icon: 'pi pi-home',
-        routerLink: '/home'
+        routerLink: '/'
       },
       // isLoggedIn true
       ...this.isLoggedIn ? [
