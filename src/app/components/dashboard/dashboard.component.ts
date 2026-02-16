@@ -11,6 +11,8 @@ import { TableModule } from 'primeng/table';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { TimelineModule } from 'primeng/timeline';
 import { ToastModule } from 'primeng/toast';
+import { NewBoxComponent } from '../new-box/new-box.component';
+import { DialogModule } from 'primeng/dialog';
 
 
 @Component({
@@ -28,11 +30,22 @@ import { ToastModule } from 'primeng/toast';
     ProgressBarModule,
     TimelineModule,
     ToastModule,
+    NewBoxComponent,
+    DialogModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+  display = false;
+
+  open() {
+    this.display = true;
+  }
+
+  close() {
+    this.display = false;
+  }
 
   sidebarVisible: boolean = false;
 

@@ -1,80 +1,83 @@
-<div class="card xs:col-12 md:col-6 xl:col-4 mx-auto px-3 text-center">
-    <div class="">
-
-        <div class="flex-1 p-4 md:p-5 overflow-y-auto">
-            <h1>Új doboz hozzáadása</h1>
+<div class="card new-box-card p-shadow-2 mx-auto">
+    <div class="card-header flex align-items-center justify-content-between">
+        <div class="title-group">
+            <i class="pi pi-box pi-lg card-icon"></i>
+            <div>
+                <h2 class="m-0">Új doboz hozzáadása</h2>
+                <small class="text-muted">Add meg a doboz méreteit és adatait</small>
+            </div>
         </div>
+        <div class="status-preview" *ngIf="model">
+            <div class="dim">{{ model.lengthCm || 0 }} × {{ model.widthCm || 0 }} × {{ model.heightCm || 0 }} cm</div>
+            <div class="weight">{{ model.maxWeightKg || 0 }} kg</div>
+        </div>
+    </div>
 
-        <!-- 
-         	labelType=QR 	lengthCm 	widthCm 	heightCm 	maxWeightKg 	location 	note 	status (enum: ACTIVE/ARCHIVED/DAMAGED)
-        -->
+    <div class="card-body p-fluid">
+        <div class="p-grid p-formgrid">
+            <div class="p-field p-col-12 p-md-6 mb-3">
+                <label for="labelType">Címke típusa</label>
+                <p-dropdown id="labelType" name="labelType" [(ngModel)]="model.labelType"
+                    [options]="[{label:'QR',value:'QR'},{label:'Barcode',value:'BARCODE'}]"
+                    placeholder="Válassz címet" required>
+                </p-dropdown>
+            </div>
 
-        <div class="p-fluid">
-            <div class="p-grid p-formgrid">
-                <div class="p-field p-col-12 p-md-6 mb-3">
-                    <label for="labelType">Címke típusa</label>
-                    <p-dropdown id="labelType" name="labelType" [(ngModel)]="model.labelType"
-                        [options]="[{label:'QR',value:'QR'},{label:'Barcode',value:'BARCODE'}]"
-                        placeholder="Válassz címet" required>
-                    </p-dropdown>
-                </div>
+            <div class="p-field p-col-12 p-md-4 mb-3">
+                <label for="lengthCm">Hossz (cm)</label>
+                <p-inputNumber id="lengthCm" name="lengthCm" [(ngModel)]="model.lengthCm" mode="decimal" min="0"
+                    required>
+                </p-inputNumber>
+            </div>
 
-                <div class="p-field p-col-12 p-md-4 mb-3">
-                    <label for="lengthCm">Hossz (cm)</label>
-                    <p-inputNumber id="lengthCm" name="lengthCm" [(ngModel)]="model.lengthCm" mode="decimal" min="0"
-                        required>
-                    </p-inputNumber>
-                </div>
+            <div class="p-field p-col-12 p-md-4 mb-3">
+                <label for="widthCm">Szélesség (cm)</label>
+                <p-inputNumber id="widthCm" name="widthCm" [(ngModel)]="model.widthCm" mode="decimal" min="0"
+                    required>
+                </p-inputNumber>
+            </div>
 
-                <div class="p-field p-col-12 p-md-4 mb-3">
-                    <label for="widthCm">Szélesség (cm)</label>
-                    <p-inputNumber id="widthCm" name="widthCm" [(ngModel)]="model.widthCm" mode="decimal" min="0"
-                        required>
-                    </p-inputNumber>
-                </div>
+            <div class="p-field p-col-12 p-md-4 mb-3">
+                <label for="heightCm">Magasság (cm)</label>
+                <p-inputNumber id="heightCm" name="heightCm" [(ngModel)]="model.heightCm" mode="decimal" min="0"
+                    required>
+                </p-inputNumber>
+            </div>
 
-                <div class="p-field p-col-12 p-md-4 mb-3">
-                    <label for="heightCm">Magasság (cm)</label>
-                    <p-inputNumber id="heightCm" name="heightCm" [(ngModel)]="model.heightCm" mode="decimal" min="0"
-                        required>
-                    </p-inputNumber>
-                </div>
+            <div class="p-field p-col-12 p-md-6 mb-3">
+                <label for="maxWeightKg">Max. súly (kg)</label>
+                <p-inputNumber id="maxWeightKg" name="maxWeightKg" [(ngModel)]="model.maxWeightKg" mode="decimal"
+                    min="0" step="0.1" suffix=" kg" required>
+                </p-inputNumber>
+                <small class="text-muted">Pontosság 0.1 kg</small>
+            </div>
 
-                <div class="p-field p-col-12 p-md-6 mb-3">
-                    <label for="maxWeightKg">Max. súly (kg)</label>
-                    <p-inputNumber id="maxWeightKg" name="maxWeightKg" [(ngModel)]="model.maxWeightKg" mode="decimal"
-                        min="0" step="0.1" suffix=" kg" required>
-                    </p-inputNumber>
-                </div>
+            <div class="p-field p-col-12 p-md-6 mb-3">
+                <label for="location">Hely</label>
+                <input id="location" name="location" pInputText type="text" [(ngModel)]="model.location"
+                    placeholder="Pl. Raktár A - Polc 3" required />
+            </div>
 
-                <div class="p-field p-col-12 p-md-6 mb-3">
-                    <label for="location">Hely</label>
-                    <input id="location" name="location" pInputText type="text" [(ngModel)]="model.location"
-                        placeholder="Pl. Raktár A - Polc 3" required />
-                </div>
+            <div class="p-field p-col-12 mb-3">
+                <label for="note">Megjegyzés</label>
+                <textarea id="note" pTextarea name="note" [(ngModel)]="model.note" rows="4" autoResize="true"
+                    placeholder="További információk (opcionális)"></textarea>
+            </div>
 
-                <div class="p-field p-col-12 mb-3">
-                    <label for="note">Megjegyzés</label> <br>
-                    <textarea id="note" pTextarea name="note" [(ngModel)]="model.note" rows="4" autoResize="true"
-                        placeholder="További információk (opcionális)"></textarea>
-                </div>
-
-                <div class="p-field p-col-12 mb-3">
-                    <label for="status">Státusz</label> <br>
-                    <p-selectButton id="status" name="status" [(ngModel)]="model.status" [options]="[
+            <div class="p-field p-col-12 mb-3">
+                <label for="status">Státusz</label>
+                <p-selectButton id="status" name="status" [(ngModel)]="model.status" [options]="[
                                             {label:'Active', value:'ACTIVE'},
                                             {label:'Archived', value:'ARCHIVED'},
                                             {label:'Damaged', value:'DAMAGED'}
                                         ]" ariaLabelledBy="status" required>
-                    </p-selectButton>
-                </div>
+                </p-selectButton>
+            </div>
 
-                <div class="p-col-12 flex gap-3 justify-content-center">
-                    <button pButton type="button" label="Mentés" class="p-mr-2"></button>
-                    <button pButton type="button" label="Mégse" class="p-button-secondary"
-                        (click)="onCancel()"></button>
-                </div>
+            <div class="p-col-12 flex gap-3 justify-content-center buttons-row">
+                <button pButton type="button" label="Mentés" class="p-button-raised p-button-success" icon="pi pi-save"></button>
+                <button pButton type="button" label="Mégse" class="p-button-secondary" (click)="onCancel()" icon="pi pi-times"></button>
             </div>
         </div>
-
     </div>
+</div>

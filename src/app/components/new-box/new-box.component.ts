@@ -9,11 +9,12 @@ import { SelectButton } from 'primeng/selectbutton';
 import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-new-box',
   standalone: true,
-  imports: [DropdownModule, InputTextModule, InputNumberModule, FormsModule, CommonModule, SelectButton, ButtonModule, TextareaModule, FloatLabelModule],
+  imports: [DropdownModule, InputTextModule, InputNumberModule, FormsModule, CommonModule, SelectButton, ButtonModule, TextareaModule, FloatLabelModule, DialogModule],
   templateUrl: './new-box.component.html',
   styleUrl: './new-box.component.scss'
 })
