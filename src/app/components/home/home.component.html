@@ -1,52 +1,49 @@
 <div>
-  <!-- Hero Section -->
   <div class="hero-section bg-primary text-white p-6 md:p-8 lg:p-10 text-center border-round shadow-3" style="background: linear-gradient(to right, #007bff, #00c6ff);">
     <h1 class="text-5xl md:text-6xl font-bold mb-4">{{title}}</h1>
-    <p class="text-xl md:text-2xl mb-6">Manage boxes and items effortlessly. Track weight, volume, and dimensions. Get smart recommendations for packing.</p>
+    <p class="text-xl md:text-2xl mb-6">Dobozok és tárgyak kezelése könnyedén. Súly, térfogat és méretek nyomon követése. Intelligens csomagolási javaslatok.</p>
     <p-button label="{{mainButtonText}}" (onClick)="getStarted()" icon="pi pi-arrow-right" iconPos="right" styleClass="p-button-lg p-button-raised p-button-secondary"></p-button>
   </div>
 
-  <!-- Features Section -->
   <div class="features-section p-6 md:p-8">
-    <h2 class="text-4xl font-bold text-center mb-6">Key Features</h2>
+    <h2 class="text-4xl font-bold text-center mb-6">Funkciók</h2>
     <div class="grid grid-nogutter justify-content-center">
       <div class="col-12 md:col-4 p-3">
-        <p-card header="Manage Boxes" subheader="Define sizes and load capacities" styleClass="shadow-2 border-round">
+        <p-card header="Dobozok kezelése" styleClass="shadow-2 border-round">
           <ng-template pTemplate="header">
             <div class="flex justify-content-center mb-3 mt-2">
               <i class="pi pi-box text-6xl text-primary"></i>
             </div>
           </ng-template>
-          <p>Create and edit boxes with dimensions (length, width, height) and weight limits in kg.</p>
+          <p>Hozzon létre szerkesszen dobozokat méretekkel (hosszúság, szélesség, magasság) és súlykorlátokkal kg-ban.</p>
         </p-card>
       </div>
       <div class="col-12 md:col-4 p-3">
-        <p-card header="Track Items" subheader="Add items with size and weight" styleClass="shadow-2 border-round">
+        <p-card header="Tárgyak kezelése" styleClass="shadow-2 border-round">
           <ng-template pTemplate="header">
             <div class="flex justify-content-center mb-3 mt-2">
               <i class="pi pi-tags text-6xl text-primary"></i>
             </div>
           </ng-template>
-          <p>Input item details including volume in cm³/m³ and ensure they fit within box constraints.</p>
+          <p>Adja meg a tárgy adatait, és győződjön meg arról, hogy azok beleférnek a doboz korlátaiba.</p>
         </p-card>
       </div>
       <div class="col-12 md:col-4 p-3">
-        <p-card header="Smart Packing" subheader="Recommendations and validations" styleClass="shadow-2 border-round">
+        <p-card header="Okos csomagolás"styleClass="shadow-2 border-round">
           <ng-template pTemplate="header">
             <div class="flex justify-content-center mb-3 mt-2">
               <i class="pi pi-check-circle text-6xl text-primary"></i>
             </div>
           </ng-template>
-          <p>Pack items into boxes with real-time checks for weight, volume, and size. Get box suggestions for items.</p>
+          <p>Pakolj dobozokba tárgyakat valós idejű súly-, térfogat- és méretellenőrzéssel. Dobozjavaslatokat is kaphatsz a tárgyakhoz.</p>
         </p-card>
       </div>
     </div>
   </div>
 
-  <!-- Call to Action Section -->
   <div *ngIf="!hideSignup" class="cta-section bg-lightest-blue p-6 md:p-8 text-center border-round shadow-2 mb-6">
-    <h2 class="text-3xl font-bold mb-4">Ready to Simplify Your Storage?</h2>
-    <p class="text-lg mb-4">Sign up today and start organizing your boxes and items efficiently.</p>
-    <a pButton label="Sign Up Now" [routerLink]="['/register']" icon="pi pi-user-plus" styleClass="p-button-lg p-button-raised p-button-success"></a>
+    <h2 class="text-3xl font-bold mb-4">Készen állsz egyszerűsíteni a pakolást?</h2>
+    <p class="text-lg mb-4">Regisztrálj most, és kezdd el hatékonyan rendszerezni a dobozaidat és a tárgyaidat.</p>
+    <a pButton label="Regisztrálj most" [routerLink]="['/register']" icon="pi pi-user-plus" styleClass="p-button-lg p-button-raised p-button-success"></a>
   </div>
 </div>

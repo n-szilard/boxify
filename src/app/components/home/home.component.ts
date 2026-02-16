@@ -14,16 +14,16 @@ import { NgIf } from "@angular/common";
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
-  title: string = "Organize Your Storage with Boxify";
-  mainButtonText: string = "Get Started";
+  title: string = "Rendszerezd a dobozolást a Boxify segítségével";
+  mainButtonText: string = "Kezdés";
   hideSignup: boolean = false;
 
   constructor(private router: Router, private auth: AuthService) {}
 
   ngOnInit(): void {
     if (this.auth.isLoggedUser()) {
-      this.title = `Welcome, ${this.auth.loggedUser()!.name}!`;
-      this.mainButtonText = "Go to Dashboard";
+      this.title = `Üdv, ${this.auth.loggedUser()!.name}!`;
+      this.mainButtonText = "Tovább a dashboard-ra";
       this.hideSignup = true;
     }
   }

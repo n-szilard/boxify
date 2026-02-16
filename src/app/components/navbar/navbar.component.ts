@@ -43,7 +43,7 @@ export class NavbarComponent implements OnInit {
     this.items = [
       // always visible
       {
-        label: 'Home',
+        label: 'Főoldal',
         icon: 'pi pi-home',
         routerLink: '/'
       },
@@ -55,7 +55,7 @@ export class NavbarComponent implements OnInit {
           routerLink: '/dashboard'
         },
         {
-          label: 'Logout',
+          label: 'Kijelentkezés',
           icon: 'pi pi-sign-out',
           command: () => {
             this.auth.logout();
@@ -65,12 +65,12 @@ export class NavbarComponent implements OnInit {
         // isLoggedIn false
       ] : [
         {
-          label: 'Login',
+          label: 'Bejelenzkezés',
           icon: 'pi pi-user',
           routerLink: '/login'
         },
         {
-          label: 'Register',
+          label: 'Regisztráció',
           icon: 'pi pi-user-plus',
           routerLink: '/register'
         },

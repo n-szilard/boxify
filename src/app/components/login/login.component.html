@@ -1,6 +1,6 @@
 <div class="card xs:col-12 md:col-6 xl:col-4 mx-auto px-3 text-center">
     <h1>Login</h1>
-    <h3 class="mb-4">Please fill in the form below to login.</h3>
+    <h3 class="mb-4">Töltsd ki az űrlapot a bejelentkezéshez</h3>
     <!--primeng login form-->
     <div class="mb-5">
         <p-floatLabel>
@@ -9,13 +9,13 @@
         </p-floatLabel>
     </div>
     <div class="mb-3">
-        <p-password id="password1" [(ngModel)]="user.password" type="password" class="w-full" [feedback]="false" placeholder="Password"
+        <p-password id="password1" [(ngModel)]="user.password" type="password" class="w-full" [feedback]="false" placeholder="Jelszó"
             styleClass="p-password p-component p-inputwrapper p-input-icon-right" [style]="{'width':'100%'}"
             [inputStyle]="{'width':'100%'}" [toggleMask]="true"></p-password>
     </div>
     <div class="mb-3">
         <p-checkbox [(ngModel)]="rememberMe" inputId="rememberMe" [binary]="true" />
-        <label for="rememberMe" class="ml-2">Remember me</label>
+        <label for="rememberMe" class="ml-2">Emlékezz rám</label>
     </div>
-    <button type="submit" pButton label="Login" (click)="login()"></button>
+    <button type="submit" pButton label="Bejelentkezés" (click)="login()"></button>
 </div>
