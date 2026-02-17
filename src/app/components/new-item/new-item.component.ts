@@ -7,15 +7,26 @@ import { TextareaModule } from 'primeng/textarea';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { Item } from '../../interfaces/item';
+import { SelectModule } from 'primeng/select';
+import { AuthService } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-new-item',
   standalone: true,
-  imports: [CommonModule, FormsModule, InputTextModule, InputNumberModule, TextareaModule, DropdownModule, ButtonModule],
+  imports: [CommonModule, FormsModule, InputTextModule, InputNumberModule, TextareaModule, DropdownModule, ButtonModule, SelectModule],
   templateUrl: './new-item.component.html',
   styleUrls: ['./new-item.component.scss']
 })
 export class NewItemComponent {
+
+  constructor(
+    private auth: AuthService,
+    private api: ApiService,
+    private message: MessageService
+  ) {}
+
   model: Item = {
     userId: '',
     name: '',
@@ -26,16 +37,7 @@ export class NewItemComponent {
     heightCm: 0,
     weightKg: 0,
     imagePath: '',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
   };
-
-  categories = [
-    { label: 'Electronics', value: 'electronics' },
-    { label: 'Books', value: 'books' },
-    { label: 'Clothing', value: 'clothing' },
-    { label: 'Other', value: 'other' }
-  ];
 
   onCancel() {
     // emit event / close dialog from wrapper — left blank intentionally
@@ -43,7 +45,24 @@ export class NewItemComponent {
 
   onSubmit() {
     // TODO: validate + send to backend
-    this.model.updatedAt = new Date().toISOString();
-    console.log('submit item', this.model);
+    if (this.auth.loggedUser()) {
+      this.model.userId = this.auth.loggedUser()!.id;
+      this.api.insert('items', this.model).subscribe({
+        next: (res) => {
+          this.message.add({
+            severity: 'success',
+            summary: 'Tárgy létrehozva!',
+            detail: `Új tárgy létrehozva!`
+          })
+        },
+        error: (err) => {
+          this.message.add({
+            severity: 'error',
+            summary: 'Hiba',
+            detail: err.error.error
+          })
+        }
+      })
+    }
   }
 }
