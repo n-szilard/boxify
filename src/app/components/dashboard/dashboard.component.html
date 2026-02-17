@@ -1,5 +1,13 @@
 <div class="min-h-screen flex flex-column surface-ground" id="background">
     <div class="flex flex-1 relative">
+        <p-dialog [(visible)]="displaybox" styleClass="blur" [modal]="true" [dismissableMask]="true" [closable]="true"
+            [style]="{width: '720px'}" header="Új doboz" (onHide)="close()">
+            <app-new-box></app-new-box>
+        </p-dialog>
+        <p-dialog [(visible)]="displayitem" styleClass="blur" [modal]="true" [dismissableMask]="true" [closable]="true"
+            [style]="{width: '720px'}" header="Új tétel" (onHide)="close1()">
+            <app-new-item></app-new-item>
+        </p-dialog>
 
         <!-- Fő tartalom -->
         <div class="flex-1 p-4 md:p-5 overflow-y-auto">
@@ -42,11 +50,7 @@
                                             class="open-btn" (click)="open()" size="small" severity="success"
                                             class="m-3"></button>
 
-                                        <p-dialog [(visible)]="displaybox" [modal]="true" [dismissableMask]="true"
-                                            [closable]="true" [style]="{width: '720px'}" header="Új doboz"
-                                            (onHide)="close()">
-                                            <app-new-box></app-new-box>
-                                        </p-dialog>
+
                                     </div>
                                 </div>
                             </div>
@@ -55,7 +59,7 @@
                         <p-table [value]="boxes" responsiveLayout="scroll" [scrollable]="true" scrollHeight="400px">
                             <ng-template pTemplate="header">
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Kód</th>
                                     <th>Méret (HxSzxM cm)</th>
                                     <th>Max kg</th>
                                     <th>Telítettség</th>
@@ -80,7 +84,7 @@
                                         <button pButton icon="pi pi-pencil"
                                             class="p-button-text p-button-rounded"></button>
                                         <button pButton icon="pi pi-trash"
-                                            class="p-button-text p-button-rounded p-button-danger"></button>
+                                            class="p-button-text p-button-rounded p-button-danger" (click)="confirmDelete(box.id, $event)"></button>
                                     </td>
                                 </tr>
                             </ng-template>
@@ -108,16 +112,12 @@
                                     <p-button label="Doboz ürítése" icon="pi pi-eraser" class="w-full mb-3"></p-button>
                                 </div>
                                 <div class="new-item-dialog-wrapper col-12 sm:col-6">
-                                    <button pButton type="button" label="Tárgy létrehozása" icon="pi pi-plus-circle" class="open-btn"
-                                        (click)="open1()"></button>
+                                    <button pButton type="button" label="Tárgy létrehozása" icon="pi pi-plus-circle"
+                                        class="open-btn" (click)="open1()"></button>
 
-                                    <p-dialog [(visible)]="displayitem" [modal]="true" [dismissableMask]="true"
-                                        [closable]="true" [style]="{width: '760px'}" header="Új tétel"
-                                        (onHide)="close1()">
-                                        <app-new-item></app-new-item>
-                                    </p-dialog>
+
                                 </div>
-                                
+
                             </div>
                         </p-card>
 

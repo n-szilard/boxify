@@ -16,7 +16,7 @@ import { DialogModule } from 'primeng/dialog';
 import { NewItemComponent } from '../new-item/new-item.component';
 import { Box } from '../../interfaces/box';
 import { ApiService } from '../../services/api.service';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 
 
 @Component({
@@ -70,11 +70,16 @@ export class DashboardComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private api: ApiService,
-    private message: MessageService
+    private message: MessageService,
+    private confirm: ConfirmationService
   ) { }
 
   ngOnInit(): void {
     console.log(this.auth.isAdmin())
+    this.getBoxes()
+  }
+
+  getBoxes() {
     if (this.auth.loggedUser()) {
       this.api.selectByField('boxes', 'userId', 'eq', this.auth.loggedUser()!.id).subscribe({
         next: (res) => {
@@ -88,8 +93,40 @@ export class DashboardComponent implements OnInit {
           })
         }
       })
-      
     }
+  }
 
+  confirmDelete(boxId: string, event: Event) {
+    this.confirm.confirm({
+      target: event.target as EventTarget,
+      message: 'Biztosan törölni szeretnéd ezt a dobozt?',
+      header: 'Veszély!',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Mégsem',
+      rejectButtonProps: {
+        label: 'Mégsem',
+        severity: 'secondary',
+        outlined: true
+      },
+      acceptButtonProps: {
+        label: 'Törlés',
+        severity: 'danger'
+      },
+
+      accept: () => {
+        this.api.delete('boxes', boxId).subscribe({
+          next: (res) => {
+            this.message.add({ severity: 'info', summary: 'Sikeres törlés', detail: 'Doboz törölve.' });
+            this.getBoxes();
+          },
+          error: (err) => {
+            this.message.add({ severity: 'error', summary: 'Hiba a törlés közben', detail: err.error.error });
+            this.getBoxes();
+          }
+        })
+      },
+      reject: () => {
+      }
+    });
   }
 }

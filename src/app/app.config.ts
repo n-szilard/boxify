@@ -6,7 +6,7 @@ import { providePrimeNG } from 'primeng/config';
 import { routes } from './app.routes';
 import LaraBlue from '../themes/lara-blue.preset';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +20,7 @@ export const appConfig: ApplicationConfig = {
         preset: LaraBlue
       }
     }),
-    MessageService
+    MessageService,
+    ConfirmationService
   ]
 };
