@@ -43,6 +43,7 @@ export class NewBoxComponent {
   }
 
   onSubmit() {
+    // TODO: adatok validálása
     if (this.auth.loggedUser()) {
       this.model.userId = this.auth.loggedUser()!.id;
       this.api.insert('boxes', this.model).subscribe({
@@ -55,7 +56,7 @@ export class NewBoxComponent {
         },
         error: (err) => {
           this.message.add({
-            severity: 'success',
+            severity: 'error',
             summary: 'Hiba',
             detail: err.error.error
           })

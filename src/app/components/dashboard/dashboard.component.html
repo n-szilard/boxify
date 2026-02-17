@@ -1,4 +1,4 @@
-<div class="min-h-screen flex flex-column surface-ground">
+<div class="min-h-screen flex flex-column surface-ground" id="background">
     <div class="flex flex-1 relative">
 
         <!-- Fő tartalom -->
@@ -7,21 +7,20 @@
             <!-- Statisztika kártyák -->
             <div class="grid mb-6 gap-4">
                 <div class="col-12 sm:col-6 lg:col-3">
-                    <div class="surface-card shadow-2 border-round p-4 flex flex-column gap-2">
+                    <div class="blur shadow-2 border-round p-4 flex flex-column gap-2">
                         <div class="text-500 text-sm font-medium">Aktív dobozok</div>
                         <div class="text-4xl font-bold">52</div>
-                        <div class="text-green-500 text-sm">+4 az elmúlt héten</div>
                     </div>
                 </div>
                 <div class="col-12 sm:col-6 lg:col-3">
-                    <div class="surface-card shadow-2 border-round p-4 flex flex-column gap-2">
+                    <div class="blur shadow-2 border-round p-4 flex flex-column gap-2">
                         <div class="text-500 text-sm font-medium">Összes tárgy</div>
                         <div class="text-4xl font-bold">384</div>
                         <div class="text-500 text-sm">Átlag 7.4 dobozonként</div>
                     </div>
                 </div>
                 <div class="col-12 sm:col-6 lg:col-3">
-                    <div class="surface-card shadow-2 border-round p-4 flex flex-column gap-2">
+                    <div class="blur shadow-2 border-round p-4 flex flex-column gap-2">
                         <div class="text-500 text-sm font-medium">Átlagos telítettség</div>
                         <div class="text-4xl font-bold">71%</div>
                         <p-progressBar [value]="71" styleClass="mt-2 h-1rem"></p-progressBar>
@@ -32,10 +31,10 @@
             <!-- Gyors műveletek + doboz lista -->
             <div class="grid">
                 <div class="col-12 lg:col-7">
-                    <p-card class="shadow-3 border-round-xl h-full">
+                    <p-card class="border-round-xl h-full" styleClass="blur">
                         <ng-template pTemplate="header">
                             <div class="flex justify-content-between align-items-center">
-                                <span class="text-xl font-semibold">Dobozok áttekintése</span>
+                                <span class="text-xl font-semibold mx-4">Dobozok áttekintése</span>
 
                                 <div class="flex gap-2">
                                     <div class="new-box-dialog-wrapper">
@@ -53,7 +52,7 @@
                             </div>
                         </ng-template>
 
-                        <p-table [value]="fakeBoxes" responsiveLayout="scroll" [scrollable]="true" scrollHeight="400px">
+                        <p-table [value]="boxes" responsiveLayout="scroll" [scrollable]="true" scrollHeight="400px">
                             <ng-template pTemplate="header">
                                 <tr>
                                     <th>ID</th>
@@ -66,14 +65,14 @@
                             </ng-template>
                             <ng-template pTemplate="body" let-box>
                                 <tr>
-                                    <td class="font-medium">{{box.id}}</td>
-                                    <td>{{box.dimensions}}</td>
-                                    <td>{{box.maxKg}} kg</td>
+                                    <td class="font-medium">{{box.code}}</td>
+                                    <td>{{box.lengthCm}}x{{box.lengthCm}}x{{box.heightCm}}</td>
+                                    <td>{{box.maxWeightKg}} kg</td>
                                     <td>
                                         <div class="flex align-items-center gap-3">
-                                            <p-progressBar [value]="box.fill" [showValue]="false"
+                                            <p-progressBar [value]="67" [showValue]="false"
                                                 styleClass="flex-1 h-8px"></p-progressBar>
-                                            <span class="text-sm whitespace-nowrap">{{box.fill}}%</span>
+                                            <span class="text-sm whitespace-nowrap">%</span>
                                         </div>
                                     </td>
                                     <td>{{box.location}}</td>
@@ -93,9 +92,9 @@
                 <div class="col-12 lg:col-5">
                     <div class="flex flex-column gap-4">
 
-                        <p-card class="shadow-3 border-round-xl">
+                        <p-card class="shadow-3 border-round-xl" styleClass="blur p-2">
                             <ng-template pTemplate="header">
-                                <span class="text-xl font-semibold">Gyors műveletek</span>
+                                <span class="text-xl font-semibold m-2">Gyors műveletek</span>
                             </ng-template>
                             <div class="grid">
                                 <div class="col-12 sm:col-6">
@@ -122,9 +121,9 @@
                             </div>
                         </p-card>
 
-                        <p-card class="shadow-3 border-round-xl flex-1">
+                        <p-card class="shadow-3 border-round-xl flex-1" styleClass="blur p-2">
                             <ng-template pTemplate="header">
-                                <span class="text-xl font-semibold">Legutóbbi tevékenységek</span>
+                                <span class="text-xl font-semibold m-2">Legutóbbi tevékenységek</span>
                             </ng-template>
                             <p-timeline [value]="fakeActivities" layout="vertical" align="left">
                                 <ng-template pTemplate="content" let-event>
@@ -142,6 +141,4 @@
             </div>
         </div>
     </div>
-
-    <p-toast></p-toast>
 </div>
