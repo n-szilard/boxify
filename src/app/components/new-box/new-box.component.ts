@@ -10,6 +10,9 @@ import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DialogModule } from 'primeng/dialog';
+import { AuthService } from '../../services/auth.service';
+import { ApiService } from '../../services/api.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-new-box',
@@ -19,6 +22,13 @@ import { DialogModule } from 'primeng/dialog';
   styleUrl: './new-box.component.scss'
 })
 export class NewBoxComponent {
+
+  constructor(
+    private auth: AuthService,
+    private api: ApiService,
+    private message: MessageService
+  ) {}
+
   model: Box = {
     userId: '',
     code: '',
@@ -32,11 +42,25 @@ export class NewBoxComponent {
     status: 'ACTIVE',
   }
 
-  onCancel() {
-
-  }
-
   onSubmit() {
-
+    if (this.auth.loggedUser()) {
+      this.model.userId = this.auth.loggedUser()!.id;
+      this.api.insert('boxes', this.model).subscribe({
+        next: (res) => {
+          this.message.add({
+            severity: 'success',
+            summary: 'Doboz létrehozva!',
+            detail: `Új doboz ${(res as any).code} néven létrehozva!`
+          })
+        },
+        error: (err) => {
+          this.message.add({
+            severity: 'success',
+            summary: 'Hiba',
+            detail: err.error.error
+          })
+        }
+      })
+    }
   }
 }

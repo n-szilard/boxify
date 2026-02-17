@@ -54,9 +54,14 @@ export class AuthService {
   }
 
   loggedUser() {
-    const userData = sessionStorage.getItem(this.userDataname);
+    let userData = sessionStorage.getItem(this.userDataname);
     if (userData) {
       return JSON.parse(userData) as User;
+    } else {
+      userData = localStorage.getItem(this.userDataname);
+      if (userData) {
+        return JSON.parse(userData) as User;
+      }
     }
     return null;
   }
