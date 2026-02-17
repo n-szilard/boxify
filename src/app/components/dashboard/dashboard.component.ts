@@ -13,6 +13,7 @@ import { TimelineModule } from 'primeng/timeline';
 import { ToastModule } from 'primeng/toast';
 import { NewBoxComponent } from '../new-box/new-box.component';
 import { DialogModule } from 'primeng/dialog';
+import { NewItemComponent } from '../new-item/new-item.component';
 
 
 @Component({
@@ -31,20 +32,25 @@ import { DialogModule } from 'primeng/dialog';
     TimelineModule,
     ToastModule,
     NewBoxComponent,
-    DialogModule
+    DialogModule,
+    NewItemComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
-  display = false;
+  displayitem = false;
+
+  open1() { this.displayitem = true; }
+  close1() { this.displayitem = false; }
+  displaybox = false;
 
   open() {
-    this.display = true;
+    this.displaybox = true;
   }
 
   close() {
-    this.display = false;
+    this.displaybox = false;
   }
 
   sidebarVisible: boolean = false;

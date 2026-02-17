@@ -36,21 +36,19 @@
                         <ng-template pTemplate="header">
                             <div class="flex justify-content-between align-items-center">
                                 <span class="text-xl font-semibold">Dobozok áttekintése</span>
-                                
+
                                 <div class="flex gap-2">
                                     <div class="new-box-dialog-wrapper">
-                                    <button pButton type="button" label="Új doboz" icon="pi pi-plus" class="open-btn" (click)="open()" size="small" severity="success" class="m-3"></button>
+                                        <button pButton type="button" label="Új doboz" icon="pi pi-plus"
+                                            class="open-btn" (click)="open()" size="small" severity="success"
+                                            class="m-3"></button>
 
-                                    <p-dialog [(visible)]="display"
-                                            [modal]="true"
-                                            [dismissableMask]="true"
-                                            [closable]="true"
-                                            [style]="{width: '720px'}"
-                                            header="Új doboz"
+                                        <p-dialog [(visible)]="displaybox" [modal]="true" [dismissableMask]="true"
+                                            [closable]="true" [style]="{width: '720px'}" header="Új doboz"
                                             (onHide)="close()">
-                                    <app-new-box></app-new-box>
-                                </p-dialog>
-                                </div>
+                                            <app-new-box></app-new-box>
+                                        </p-dialog>
+                                    </div>
                                 </div>
                             </div>
                         </ng-template>
@@ -110,9 +108,17 @@
                                 <div class="col-12 sm:col-6">
                                     <p-button label="Doboz ürítése" icon="pi pi-eraser" class="w-full mb-3"></p-button>
                                 </div>
-                                <div class="col-12 sm:col-6">
-                                    <p-button label="QR kód generálás" icon="pi pi-qrcode" class="w-full"></p-button>
+                                <div class="new-item-dialog-wrapper col-12 sm:col-6">
+                                    <button pButton type="button" label="Tárgy létrehozása" icon="pi pi-plus-circle" class="open-btn"
+                                        (click)="open1()"></button>
+
+                                    <p-dialog [(visible)]="displayitem" [modal]="true" [dismissableMask]="true"
+                                        [closable]="true" [style]="{width: '760px'}" header="Új tétel"
+                                        (onHide)="close1()">
+                                        <app-new-item></app-new-item>
+                                    </p-dialog>
                                 </div>
+                                
                             </div>
                         </p-card>
 
