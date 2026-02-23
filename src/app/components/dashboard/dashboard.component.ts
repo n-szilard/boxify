@@ -17,6 +17,7 @@ import { NewItemComponent } from '../new-item/new-item.component';
 import { Box } from '../../interfaces/box';
 import { ApiService } from '../../services/api.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { Item } from '../../interfaces/item';
 
 
 @Component({
@@ -45,7 +46,10 @@ export class DashboardComponent implements OnInit {
   displayitem = false;
 
   open1() { this.displayitem = true; }
-  close1() { this.displayitem = false; }
+  close1() {
+    this.getItems(); 
+    this.displayitem = false;
+  }
   displaybox = false;
 
   open() {
@@ -53,12 +57,15 @@ export class DashboardComponent implements OnInit {
   }
 
   close() {
+    this.getBoxes();
     this.displaybox = false;
   }
 
   sidebarVisible: boolean = false;
 
   boxes: Box[] = [];
+
+  items: Item[] = [];
 
   fakeActivities = [
     { action: 'Tárgy hozzáadva', detail: 'Téli ruhák → BOX-23014K', time: '15 perce' },
@@ -76,7 +83,8 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.auth.isAdmin())
-    this.getBoxes()
+    this.getBoxes();
+    this.getItems();
   }
 
   getBoxes() {
@@ -90,6 +98,23 @@ export class DashboardComponent implements OnInit {
             severity: 'error',
             summary: 'Hiba',
             detail: 'Hiba a dobozok betöltése során!'
+          })
+        }
+      })
+    }
+  }
+
+  getItems() {
+    if (this.auth.loggedUser()) {
+      this.api.selectByField('items', 'userId', 'eq', this.auth.loggedUser()!.id).subscribe({
+        next: (res) => {
+          this.items = res as any
+        },
+        error: (err) => {
+          this.message.add({
+            severity: 'error',
+            summary: 'Hiba',
+            detail: 'Hiba a tárgyak betöltése során!'
           })
         }
       })
@@ -122,6 +147,40 @@ export class DashboardComponent implements OnInit {
           error: (err) => {
             this.message.add({ severity: 'error', summary: 'Hiba a törlés közben', detail: err.error.error });
             this.getBoxes();
+          }
+        })
+      },
+      reject: () => {
+      }
+    });
+  }
+
+  confirmDeleteItem(itemId: string, event: Event) {
+    this.confirm.confirm({
+      target: event.target as EventTarget,
+      message: 'Biztosan törölni szeretnéd ezt a tárgyat?',
+      header: 'Veszély!',
+      icon: 'pi pi-info-circle',
+      rejectLabel: 'Mégsem',
+      rejectButtonProps: {
+        label: 'Mégsem',
+        severity: 'secondary',
+        outlined: true
+      },
+      acceptButtonProps: {
+        label: 'Törlés',
+        severity: 'danger'
+      },
+
+      accept: () => {
+        this.api.delete('items', itemId).subscribe({
+          next: (res) => {
+            this.message.add({ severity: 'info', summary: 'Sikeres törlés', detail: 'Tárgy törölve.' });
+            this.getItems();
+          },
+          error: (err) => {
+            this.message.add({ severity: 'error', summary: 'Hiba a törlés közben', detail: err.error.error });
+            this.getItems();
           }
         })
       },
