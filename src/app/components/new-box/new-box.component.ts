@@ -43,7 +43,14 @@ export class NewBoxComponent {
   }
 
   onSubmit() {
-    // TODO: adatok validálása
+    if ((this.model.lengthCm ?? 0) <= 0 || (this.model.widthCm ?? 0) <= 0 || (this.model.heightCm ?? 0) <= 0 || (this.model.maxWeightKg ?? 0) <= 0 || this.model.location == '') {
+      this.message.add({
+        severity: 'error',
+        summary: 'Hiba',
+        detail: 'Kérjük, töltse ki az összes mezőt!'
+      });
+      return;
+    }
     if (this.auth.loggedUser()) {
       this.model.userId = this.auth.loggedUser()!.id;
       this.api.insert('boxes', this.model).subscribe({

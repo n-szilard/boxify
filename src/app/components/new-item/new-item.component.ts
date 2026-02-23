@@ -25,7 +25,7 @@ export class NewItemComponent {
     private auth: AuthService,
     private api: ApiService,
     private message: MessageService
-  ) {}
+  ) { }
 
   model: Item = {
     userId: '',
@@ -44,7 +44,15 @@ export class NewItemComponent {
   }
 
   onSubmit() {
-    // TODO: validate + send to backend
+    if (!this.model.name?.trim() || !this.model.description?.trim() || !this.model.category?.trim() || (this.model.lengthCm ?? 0) <= 0 || (this.model.widthCm ?? 0) <= 0 || (this.model.heightCm ?? 0) <= 0 || (this.model.weightKg ?? 0) <= 0) {
+      this.message.add({
+        severity: 'error',
+        summary: 'Hiba',
+        detail: 'Kérjük, töltse ki az összes mezőt!'
+      });
+      return;
+    }
+
     if (this.auth.loggedUser()) {
       this.model.userId = this.auth.loggedUser()!.id;
       this.api.insert('items', this.model).subscribe({
@@ -54,6 +62,18 @@ export class NewItemComponent {
             summary: 'Tárgy létrehozva!',
             detail: `Új tárgy létrehozva!`
           })
+
+          this.model = {
+            userId: '',
+            name: '',
+            description: '',
+            category: '',
+            lengthCm: 0,
+            widthCm: 0,
+            heightCm: 0,
+            weightKg: 0,
+            imagePath: '',
+          }
         },
         error: (err) => {
           this.message.add({
