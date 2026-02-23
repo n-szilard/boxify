@@ -1,0 +1,280 @@
+$bg-card: #1e1e2e;
+$bg-input: #12121f;
+$bg-row: #252538;
+$blue: #3b82f6;
+$green: #22c55e;
+$yellow: #f59e0b;
+$red: #ef4444;
+$border: rgba(255,255,255,0.08);
+$text: #e2e8f0;
+$muted: #94a3b8;
+$dim: #64748b;
+
+@mixin card { background: $bg-card; border: 1px solid $border; border-radius: 12px; }
+@mixin input-style {
+  background: $bg-input; border: 1px solid rgba(255,255,255,0.12);
+  color: $text; border-radius: 6px; padding: 0.5rem 0.75rem;
+  font-size: 0.875rem; width: 100%; box-sizing: border-box;
+  &::placeholder { color: $dim; }
+  &:focus { border-color: $blue; box-shadow: 0 0 0 2px rgba(59,130,246,0.2); outline: none; }
+}
+
+:host { display: block; }
+
+.packing-wrapper {
+  padding: 1.5rem;
+  color: $text;
+
+  .page-header {
+    margin-bottom: 1.5rem;
+    .title-block {
+      display: flex; align-items: center; gap: 0.85rem;
+      > i { font-size: 1.5rem; color: $blue; }
+      h2 { font-size: 1.35rem; font-weight: 700; color: #fff; margin: 0 0 0.1rem; }
+      span { font-size: 0.82rem; color: $muted; }
+    }
+  }
+
+  .packing-grid {
+    display: grid;
+    grid-template-columns: 270px 1fr 250px;
+    gap: 1.25rem;
+    align-items: start;
+  }
+
+  // Panel alap
+  .panel {
+    @include card;
+    overflow: hidden;
+
+    .panel-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem; border-bottom: 1px solid $border;
+
+      .panel-title {
+        font-weight: 600; font-size: 0.9rem; color: $text;
+        i { color: $blue; margin-right: 0.4rem; }
+      }
+      .badge {
+        background: rgba(59,130,246,0.15); color: $blue;
+        border-radius: 20px; padding: 0.15rem 0.6rem;
+        font-size: 0.75rem; font-weight: 600;
+      }
+
+      ::ng-deep .box-dd {
+        background: $bg-input; border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 6px; min-width: 180px;
+        &.p-inputwrapper { border: none !important; box-shadow: none !important; background: transparent !important; }
+        .p-dropdown-label { color: $text; font-size: 0.85rem; padding: 0.4rem 0.75rem; background: $bg-input; border-radius: 6px; }
+        .p-dropdown-trigger { color: $dim; }
+        &.p-focus { outline: none; }
+      }
+      ::ng-deep .p-dropdown.box-dd {
+        border: 1px solid rgba(255,255,255,0.12);
+        &.p-focus { border-color: $blue; box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
+      }
+      ::ng-deep .p-dropdown-panel {
+        background: $bg-card; border: 1px solid $border;
+        .p-dropdown-item { color: $text; font-size: 0.85rem;
+          &:hover, &.p-highlight { background: rgba(59,130,246,0.15); color: $blue; }
+        }
+      }
+    }
+  }
+
+  // ── BAL PANEL ──
+  .search-wrap {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.75rem 1rem; border-bottom: 1px solid $border;
+    i { color: $dim; flex-shrink: 0; }
+    input { @include input-style; padding: 0.4rem 0.6rem; }
+  }
+
+  .item-list {
+    max-height: calc(100vh - 260px);
+    overflow-y: auto; padding: 0.5rem;
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+  }
+
+  .item-card {
+    padding: 0.75rem; border-radius: 8px; cursor: pointer;
+    margin-bottom: 0.35rem; border: 1px solid transparent; transition: all 0.15s;
+    &:hover { background: $bg-row; border-color: $border; }
+    &.selected { background: rgba(59,130,246,0.12); border-color: $blue; }
+    &.packed { opacity: 0.6; }
+
+    .item-card-top {
+      display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+      margin-bottom: 0.15rem;
+      .item-name { font-weight: 600; font-size: 0.875rem; color: $text; }
+    }
+    .packed-chip {
+      background: rgba(34,197,94,0.15); color: $green;
+      font-size: 0.68rem; border-radius: 4px; padding: 0.1rem 0.4rem;
+      display: flex; align-items: center; gap: 0.2rem; white-space: nowrap;
+      i { font-size: 0.6rem; }
+    }
+    .item-desc { display: block; font-size: 0.75rem; color: $muted; margin-bottom: 0.4rem; }
+    .item-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .tag {
+      background: $bg-input; border-radius: 4px;
+      padding: 0.12rem 0.45rem; font-size: 0.7rem; color: $muted;
+      i { margin-right: 0.2rem; font-size: 0.65rem; }
+      &.category { color: $blue; background: rgba(59,130,246,0.1); }
+    }
+  }
+
+  // ── KÖZÉP PANEL ──
+  .main-panel {
+    .stats-row {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem; padding: 1rem 1.25rem; border-bottom: 1px solid $border;
+      .stat {
+        background: $bg-input; border-radius: 8px; padding: 0.7rem;
+        display: flex; flex-direction: column; gap: 0.2rem;
+        .stat-lbl { font-size: 0.68rem; color: $dim; text-transform: uppercase; letter-spacing: 0.05em; }
+        .stat-val { font-size: 0.88rem; font-weight: 600; color: $text; }
+      }
+    }
+
+    .fill-block {
+      padding: 1rem 1.25rem; border-bottom: 1px solid $border;
+      display: flex; flex-direction: column; gap: 0.8rem;
+      .fill-row {
+        .fill-meta {
+          display: flex; justify-content: space-between;
+          font-size: 0.8rem; color: $muted; margin-bottom: 0.3rem;
+          .fill-nums {
+            font-weight: 600; color: $text;
+            &.warn { color: $yellow; }
+            &.danger { color: $red; }
+          }
+        }
+      }
+    }
+
+    .add-section {
+      padding: 0.85rem 1.25rem; border-bottom: 1px solid $border;
+      min-height: 54px; display: flex; align-items: center;
+
+      .add-row {
+        display: flex; align-items: center; gap: 0.65rem; width: 100%; flex-wrap: wrap;
+        .selected-item-info {
+          display: flex; align-items: center; gap: 0.4rem; flex: 1; min-width: 0;
+          i { color: $blue; font-size: 0.8rem; flex-shrink: 0; }
+          span { font-weight: 600; font-size: 0.875rem; color: $text; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+          small { color: $muted; font-size: 0.72rem; white-space: nowrap; }
+        }
+        .btn-add {
+          background: $blue; border: none; border-radius: 6px;
+          font-size: 0.82rem; padding: 0.4rem 0.85rem; white-space: nowrap;
+          &:hover { background: darken($blue, 8%); }
+        }
+        .btn-clear { color: $dim !important; padding: 0.4rem !important; }
+      }
+      .add-hint { font-size: 0.8rem; color: $dim; display: flex; align-items: center; gap: 0.5rem;
+        i { font-size: 0.75rem; }
+      }
+    }
+
+    .box-list {
+      max-height: calc(100vh - 540px);
+      overflow-y: auto; padding: 0.5rem;
+      &::-webkit-scrollbar { width: 4px; }
+      &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+      .box-row {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0.6rem 0.75rem; border-radius: 8px;
+        margin-bottom: 0.3rem; background: $bg-row; border: 1px solid $border;
+        .box-row-info {
+          flex: 1; min-width: 0;
+          .box-row-name { display: block; font-weight: 600; font-size: 0.875rem; color: $text; }
+          .box-row-meta { font-size: 0.72rem; color: $muted; }
+        }
+        .box-row-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .btn-remove {
+          background: rgba(239,68,68,0.1) !important;
+          border: 1px solid rgba(239,68,68,0.25) !important;
+          color: $red !important; border-radius: 6px; width: 32px; height: 32px; padding: 0;
+          &:hover { background: rgba(239,68,68,0.25) !important; }
+        }
+      }
+    }
+  }
+
+  // ── JOBB PANEL ──
+  .summary-list {
+    padding: 0.6rem; max-height: calc(100vh - 200px); overflow-y: auto;
+    &::-webkit-scrollbar { width: 4px; }
+    &::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+  }
+
+  .summary-card {
+    background: $bg-input; border-radius: 8px; padding: 0.85rem;
+    margin-bottom: 0.5rem; border: 1px solid $border;
+    cursor: pointer; transition: border-color 0.15s;
+    &:hover { border-color: rgba(59,130,246,0.3); }
+    &.active { border-color: $blue; background: rgba(59,130,246,0.07); }
+
+    .sc-head {
+      display: flex; justify-content: space-between; align-items: baseline;
+      margin-bottom: 0.6rem;
+      .sc-code { font-weight: 700; font-size: 0.85rem; color: $text; }
+      .sc-loc { font-size: 0.72rem; color: $dim; }
+    }
+    .sc-bar-row {
+      display: flex; align-items: center; gap: 0.4rem;
+      margin-bottom: 0.35rem; font-size: 0.72rem;
+      .sc-lbl { width: 34px; flex-shrink: 0; color: $muted; }
+      .sc-bar-wrap { flex: 1; }
+      .sc-pct { width: 36px; text-align: right; font-weight: 600; color: $text;
+        &.warn { color: $yellow; }
+        &.danger { color: $red; }
+      }
+    }
+    .sc-status {
+      display: flex; align-items: center; gap: 0.35rem;
+      font-size: 0.7rem; color: $dim; margin-top: 0.5rem;
+      .status-dot {
+        width: 6px; height: 6px; border-radius: 50%;
+        &.dot-active   { background: $green; }
+        &.dot-archived { background: $dim; }
+        &.dot-damaged  { background: $red; }
+      }
+    }
+  }
+
+  // Progress bar overrides
+  ::ng-deep {
+    .pbar, .mini-pbar {
+      border-radius: 4px !important;
+      .p-progressbar-value { border-radius: 4px !important; }
+    }
+    .pbar     { height: 8px !important; background: $bg-input !important; }
+    .mini-pbar { height: 5px !important; background: $bg-row   !important; }
+    .bar-ok     .p-progressbar-value { background: $blue   !important; }
+    .bar-warn   .p-progressbar-value { background: $yellow !important; }
+    .bar-danger .p-progressbar-value { background: $red    !important; }
+
+    .qty-input, .qty-sm {
+      .p-inputnumber-input { @include input-style; text-align: center; }
+      .p-inputnumber-button {
+        background: $bg-row !important; border-color: rgba(255,255,255,0.12) !important; color: $muted !important;
+        &:hover { background: rgba(59,130,246,0.2) !important; color: $blue !important; }
+      }
+    }
+    .qty-input .p-inputnumber-input { width: 55px; padding: 0.4rem 0.3rem; }
+    .qty-sm    .p-inputnumber-input { width: 42px; font-size: 0.8rem; padding: 0.35rem 0.25rem; }
+  }
+
+  // Üres állapotok
+  .empty-hint {
+    display: flex; align-items: center; justify-content: center;
+    gap: 0.5rem; color: $dim; font-size: 0.82rem; padding: 1rem;
+    i { font-size: 1.2rem; opacity: 0.5; }
+    &.padded { padding: 2.5rem 1rem; flex-direction: column; gap: 0.4rem; i { font-size: 1.8rem; } }
+    &.tall   { padding: 5rem 1rem;   flex-direction: column; gap: 0.6rem; i { font-size: 2.5rem; } }
+  }
+}

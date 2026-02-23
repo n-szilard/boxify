@@ -1,1 +1,262 @@
-<p>packing works!</p>
+<p-toast position="top-right"></p-toast>
+
+<div class="packing-wrapper">
+
+  <div class="page-header">
+    <div class="title-block">
+      <i class="pi pi-box"></i>
+      <div>
+        <h2>Pakolás</h2>
+        <span>Tárgyak elhelyezése dobozokba</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="packing-grid">
+
+    <!-- ═══ BAL: Tárgyválasztó ═══ -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title"><i class="pi pi-tag"></i> Tárgyak</span>
+        <span class="badge">{{ allItems.length }} db</span>
+      </div>
+
+      <div class="search-wrap">
+        <i class="pi pi-search"></i>
+        <input pInputText [(ngModel)]="itemSearch" placeholder="Keresés..." />
+      </div>
+
+      <div class="item-list">
+        <div class="item-card"
+          *ngFor="let item of filteredItems"
+          [class.selected]="selectedItem?.id === item.id"
+          [class.packed]="isInBox(item)"
+          (click)="selectItem(item)">
+
+          <div class="item-card-top">
+            <span class="item-name">{{ item.name }}</span>
+            <span class="packed-chip" *ngIf="isInBox(item)">
+              <i class="pi pi-check"></i> bent van
+            </span>
+          </div>
+
+          <span class="item-desc" *ngIf="item.description">{{ item.description }}</span>
+
+          <div class="item-tags">
+            <span class="tag" *ngIf="item.lengthCm">
+              <i class="pi pi-arrows-alt"></i> {{ itemSizeStr(item) }}
+            </span>
+            <span class="tag" *ngIf="item.weightKg">
+              <i class="pi pi-chart-bar"></i> {{ item.weightKg }} kg
+            </span>
+            <span class="tag category" *ngIf="item.category">
+              {{ item.category }}
+            </span>
+          </div>
+        </div>
+
+        <div class="empty-hint" *ngIf="filteredItems.length === 0">
+          <i class="pi pi-inbox"></i><span>Nincs találat</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ KÖZÉP: Doboz nézet ═══ -->
+    <div class="panel main-panel">
+      <div class="panel-head">
+        <span class="panel-title"><i class="pi pi-cube"></i> Doboz tartalma</span>
+        <p-dropdown
+          [options]="boxes"
+          [(ngModel)]="selectedBox"
+          optionLabel="code"
+          placeholder="Válasszon dobozt..."
+          styleClass="box-dd"
+          (onChange)="onBoxChange()">
+        </p-dropdown>
+      </div>
+
+      <ng-container *ngIf="selectedBox; else noBox">
+
+        <!-- Stat kártyák -->
+        <div class="stats-row">
+          <div class="stat">
+            <span class="stat-lbl">Méret (cm)</span>
+            <span class="stat-val">{{ boxSizeStr(selectedBox) }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-lbl">Max súly</span>
+            <span class="stat-val">{{ selectedBox.maxWeightKg }} kg</span>
+          </div>
+          <div class="stat">
+            <span class="stat-lbl">Helyszín</span>
+            <span class="stat-val">{{ selectedBox.location || '—' }}</span>
+          </div>
+          <div class="stat">
+            <span class="stat-lbl">Tárgyak</span>
+            <span class="stat-val">{{ boxItems.length }} db</span>
+          </div>
+        </div>
+
+        <!-- Telítettség sávok -->
+        <div class="fill-block">
+          <div class="fill-row">
+            <div class="fill-meta">
+              <span>Súly telítettség</span>
+              <span class="fill-nums"
+                [class.warn]="(fill?.weightPercent ?? 0) > 80"
+                [class.danger]="(fill?.weightPercent ?? 0) >= 100">
+                {{ fill?.usedWeightKg | number:'1.1-1' }} / {{ selectedBox.maxWeightKg }} kg
+                &nbsp;·&nbsp;
+                {{ fill?.weightPercent ?? 0 }}%
+              </span>
+            </div>
+            <p-progressBar [value]="weightPct"
+              [styleClass]="'pbar ' + barClass(fill?.weightPercent ?? 0)"
+              [showValue]="false">
+            </p-progressBar>
+          </div>
+
+          <div class="fill-row">
+            <div class="fill-meta">
+              <span>Méret telítettség</span>
+              <span class="fill-nums"
+                [class.warn]="(fill?.volumePercent ?? 0) > 80"
+                [class.danger]="(fill?.volumePercent ?? 0) >= 100">
+                {{ fill?.usedVolumeCm3 | number:'1.0-0' }} / {{ fill?.boxVolumeCm3 | number:'1.0-0' }} cm³
+                &nbsp;·&nbsp;
+                {{ fill?.volumePercent ?? 0 }}%
+              </span>
+            </div>
+            <p-progressBar [value]="volumePct"
+              [styleClass]="'pbar ' + barClass(fill?.volumePercent ?? 0)"
+              [showValue]="false">
+            </p-progressBar>
+          </div>
+        </div>
+
+        <!-- Hozzáadás -->
+        <div class="add-section">
+          <div class="add-row" *ngIf="selectedItem; else noItemSelected">
+            <div class="selected-item-info">
+              <i class="pi pi-tag"></i>
+              <span>{{ selectedItem.name }}</span>
+              <small *ngIf="selectedItem.lengthCm">{{ itemSizeStr(selectedItem) }}</small>
+              <small *ngIf="selectedItem.weightKg">· {{ selectedItem.weightKg }} kg</small>
+            </div>
+            <p-inputNumber [(ngModel)]="addQuantity" [min]="1" [max]="99"
+              [showButtons]="true" styleClass="qty-input">
+            </p-inputNumber>
+            <button pButton label="Hozzáadás" icon="pi pi-plus"
+              class="btn-add" (click)="addItemToBox()">
+            </button>
+            <button pButton icon="pi pi-times"
+              class="btn-clear p-button-text" (click)="selectedItem = null">
+            </button>
+          </div>
+          <ng-template #noItemSelected>
+            <div class="add-hint">
+              <i class="pi pi-arrow-left"></i> Kattintson egy tárgyra balról
+            </div>
+          </ng-template>
+        </div>
+
+        <!-- Dobozban lévő tárgyak -->
+        <div class="box-list" *ngIf="!loading">
+          <div class="box-row" *ngFor="let bi of boxItems">
+            <div class="box-row-info">
+              <span class="box-row-name">{{ bi.item.name }}</span>
+              <span class="box-row-meta">
+                <ng-container *ngIf="bi.item.lengthCm">{{ itemSizeStr(bi.item) }} · </ng-container>
+                <ng-container *ngIf="bi.item.weightKg">
+                  {{ bi.item.weightKg }} kg/db · összesen: {{ (bi.item.weightKg * bi.quantity) | number:'1.1-1' }} kg
+                </ng-container>
+              </span>
+            </div>
+            <div class="box-row-actions">
+              <p-inputNumber [ngModel]="bi.quantity" [min]="1" [max]="99"
+                [showButtons]="true" styleClass="qty-sm"
+                (onInput)="updateQuantity(bi, +$event.value! || 1)">
+              </p-inputNumber>
+              <button pButton icon="pi pi-trash" class="btn-remove" (click)="removeItem(bi)"></button>
+            </div>
+          </div>
+
+          <div class="empty-hint padded" *ngIf="boxItems.length === 0">
+            <i class="pi pi-inbox"></i><span>A doboz üres</span>
+          </div>
+        </div>
+
+        <div class="empty-hint padded" *ngIf="loading">
+          <i class="pi pi-spin pi-spinner"></i><span>Betöltés...</span>
+        </div>
+
+      </ng-container>
+
+      <ng-template #noBox>
+        <div class="empty-hint tall">
+          <i class="pi pi-cube"></i><span>Válasszon dobozt a legördülőből</span>
+        </div>
+      </ng-template>
+    </div>
+
+    <!-- ═══ JOBB: Összesítő ═══ -->
+    <div class="panel">
+      <div class="panel-head">
+        <span class="panel-title"><i class="pi pi-chart-pie"></i> Összesítő</span>
+      </div>
+
+      <div class="summary-list">
+        <div class="summary-card"
+          *ngFor="let box of boxes"
+          [class.active]="selectedBox?.id === box.id"
+          (click)="selectedBox = box; onBoxChange()">
+
+          <div class="sc-head">
+            <span class="sc-code">{{ box.code }}</span>
+            <span class="sc-loc">{{ box.location }}</span>
+          </div>
+
+          <div class="sc-bar-row">
+            <span class="sc-lbl">Súly</span>
+            <div class="sc-bar-wrap">
+              <p-progressBar [value]="getWPct(box)"
+                [styleClass]="'mini-pbar ' + barClass(getWPct(box))"
+                [showValue]="false">
+              </p-progressBar>
+            </div>
+            <span class="sc-pct"
+              [class.warn]="getWPct(box) > 80"
+              [class.danger]="getWPct(box) >= 100">
+              {{ getFill(box)?.weightPercent ?? 0 }}%
+            </span>
+          </div>
+
+          <div class="sc-bar-row">
+            <span class="sc-lbl">Méret</span>
+            <div class="sc-bar-wrap">
+              <p-progressBar [value]="getVPct(box)"
+                [styleClass]="'mini-pbar ' + barClass(getVPct(box))"
+                [showValue]="false">
+              </p-progressBar>
+            </div>
+            <span class="sc-pct"
+              [class.warn]="getVPct(box) > 80"
+              [class.danger]="getVPct(box) >= 100">
+              {{ getFill(box)?.volumePercent ?? 0 }}%
+            </span>
+          </div>
+
+          <div class="sc-status">
+            <span class="status-dot" [class]="'dot-' + box.status.toLowerCase()"></span>
+            {{ box.status }}
+          </div>
+        </div>
+
+        <div class="empty-hint" *ngIf="boxes.length === 0">
+          <i class="pi pi-inbox"></i><span>Nincsenek dobozok</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
