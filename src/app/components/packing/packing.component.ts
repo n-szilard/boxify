@@ -21,7 +21,6 @@ import { BoxItem, FillData } from '../../interfaces/boxItem';
     ButtonModule, InputTextModule, DropdownModule,
     ProgressBarModule, InputNumberModule, ToastModule
   ],
-  providers: [MessageService],
   templateUrl: './packing.component.html',
   styleUrls: ['./packing.component.scss']
 })

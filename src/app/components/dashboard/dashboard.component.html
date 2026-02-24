@@ -80,7 +80,7 @@
                                     <td>{{box.location}}</td>
                                     <td class="text-right">
                                         <button pButton icon="pi pi-pencil"
-                                            class="p-button-text p-button-rounded"></button>
+                                            class="p-button-text p-button-rounded" (click)="editBox(box.id)"></button>
                                         <button pButton icon="pi pi-trash"
                                             class="p-button-text p-button-rounded p-button-danger" (click)="confirmDelete(box.id, $event)"></button>
                                     </td>

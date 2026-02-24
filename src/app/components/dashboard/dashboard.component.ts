@@ -121,6 +121,13 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  editBox(boxId: string) {
+    let box = this.boxes.find(b => b.id === boxId);
+    if (box) {
+      // TODO: implement edit functionality
+    }
+  }
+
   confirmDelete(boxId: string, event: Event) {
     this.confirm.confirm({
       target: event.target as EventTarget,

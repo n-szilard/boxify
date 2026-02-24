@@ -1,6 +1,4 @@
-<p-toast position="top-right"></p-toast>
-
-<div class="packing-wrapper">
+<div class="packing-wrapper" id="background">
 
   <div class="page-header">
     <div class="title-block">
@@ -15,7 +13,7 @@
   <div class="packing-grid">
 
     <!-- ═══ BAL: Tárgyválasztó ═══ -->
-    <div class="panel">
+    <div class="panel blur">
       <div class="panel-head">
         <span class="panel-title"><i class="pi pi-tag"></i> Tárgyak</span>
         <span class="badge">{{ allItems.length }} db</span>
@@ -62,7 +60,7 @@
     </div>
 
     <!-- ═══ KÖZÉP: Doboz nézet ═══ -->
-    <div class="panel main-panel">
+    <div class="panel main-panel blur">
       <div class="panel-head">
         <span class="panel-title"><i class="pi pi-cube"></i> Doboz tartalma</span>
         <p-dropdown
@@ -200,7 +198,7 @@
     </div>
 
     <!-- ═══ JOBB: Összesítő ═══ -->
-    <div class="panel">
+    <div class="panel blur">
       <div class="panel-head">
         <span class="panel-title"><i class="pi pi-chart-pie"></i> Összesítő</span>
       </div>
