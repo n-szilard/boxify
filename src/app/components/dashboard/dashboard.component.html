@@ -54,8 +54,8 @@
                 <div class="col-12 sm:col-6 lg:col-3">
                     <div class="blur shadow-2 border-round p-4 flex flex-column gap-2">
                         <div class="text-500 text-sm font-medium">Átlagos telítettség</div>
-                        <div class="text-4xl font-bold">71%</div>
-                        <p-progressBar [value]="71" styleClass="mt-2 h-1rem"></p-progressBar>
+                        <div class="text-4xl font-bold">{{averageFullness}}%</div>
+                        <p-progressBar [value]="averageFullness" styleClass="mt-2 h-1rem"></p-progressBar>
                     </div>
                 </div>
             </div>
@@ -84,7 +84,7 @@
                                     <th>Kód</th>
                                     <th>Méret (HxSzxM cm)</th>
                                     <th>Max kg</th>
-                                    <th>Telítettség</th>
+                                    <th>Telítettség (súly)</th>
                                     <th>Helyszín</th>
                                     <th></th>
                                 </tr>
@@ -94,13 +94,7 @@
                                     <td class="font-medium">{{box.code}}</td>
                                     <td>{{box.lengthCm}}x{{box.lengthCm}}x{{box.heightCm}}</td>
                                     <td>{{box.maxWeightKg}} kg</td>
-                                    <td>
-                                        <div class="flex align-items-center gap-3">
-                                            <p-progressBar [value]="67" [showValue]="false"
-                                                styleClass="flex-1 h-8px"></p-progressBar>
-                                            <span class="text-sm whitespace-nowrap">%</span>
-                                        </div>
-                                    </td>
+                                    <td class="text-center">{{box.weightPercent}}%</td>
                                     <td>{{box.location}}</td>
                                     <td class="text-right">
                                         <button pButton icon="pi pi-pencil" class="p-button-text p-button-rounded"

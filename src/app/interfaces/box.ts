@@ -10,6 +10,8 @@ export interface Box {
     location: string,
     note: string,
     status: 'ACTIVE' | 'ARCHIVED' | 'DAMAGED',
+    weightPercent?: number,
+    volumePercent?: number,
     createdAt?: Date,
     updatedAt?: Date
 }

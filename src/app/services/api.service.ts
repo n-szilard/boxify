@@ -90,6 +90,11 @@ export class ApiService {
     return this.http.delete(`${this.server}/boxitems/empty/${boxId}`, this.tokenHeader());
   }
 
+  // /api/boxitems/:boxId/fill
+  getBoxFullness(boxId: string) {
+    return this.http.get(`${this.server}/boxitems/${boxId}/fill`, this.tokenHeader());
+  }
+
   uploadFile() { }
 
   downloadFile() { }

@@ -61,6 +61,8 @@ export class DashboardComponent implements OnInit {
 
   displayitem = false;
 
+  averageFullness = 0;
+
   open1() { this.displayitem = true; }
   close1() {
     this.getItems();
@@ -108,6 +110,8 @@ export class DashboardComponent implements OnInit {
       this.api.selectByField('boxes', 'userId', 'eq', this.auth.loggedUser()!.id).subscribe({
         next: (res) => {
           this.boxes = res as any
+
+          this.getBoxFullness()
         },
         error: (err) => {
           this.message.add({
@@ -135,6 +139,25 @@ export class DashboardComponent implements OnInit {
         }
       })
     }
+  }
+
+  async getBoxFullness() {
+    this.boxes.forEach(box => {
+      this.api.getBoxFullness(box.id!).subscribe({
+        next: (res) => {
+          box.weightPercent = (res as any).weightPercent;
+          this.averageFullness += (res as any).weightPercent || 0;
+        },
+        error: (err) => {
+          this.message.add({
+            severity: 'error',
+            summary: 'Hiba',
+            detail: 'Hiba a doboz telítettségének lekérdezése során!'
+          })
+        }
+      });
+    });
+    this.averageFullness = this.boxes.length > 0 ? this.averageFullness / this.boxes.length : 0;
   }
 
   editBox(boxId: string) {

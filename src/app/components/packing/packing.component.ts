@@ -12,6 +12,7 @@ import { ApiService } from '../../services/api.service';
 import { Box } from '../../interfaces/box';
 import { Item } from '../../interfaces/item';
 import { BoxItem, FillData } from '../../interfaces/boxItem';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-packing',
@@ -37,16 +38,17 @@ export class PackingComponent implements OnInit {
   itemSearch = '';
   loading = false;
 
-  constructor(private api: ApiService, private msg: MessageService) {}
+  constructor(private api: ApiService, private msg: MessageService, private auth: AuthService) {}
 
   ngOnInit(): void {
-    this.api.selectAll('boxes').subscribe({
+    this.api.selectByField('boxes', 'userId', 'eq', this.auth.loggedUser()!.id).subscribe({
       next: (data: any) => {
         this.boxes = data as Box[];
         this.boxes.forEach(b => this.loadFill(b.id!));
       }
     });
-    this.api.selectAll('items').subscribe({
+
+    this.api.selectByField('items', 'userId', 'eq', this.auth.loggedUser()!.id).subscribe({
       next: (data: any) => this.allItems = data as Item[]
     });
   }
