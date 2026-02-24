@@ -18,6 +18,8 @@ import { Box } from '../../interfaces/box';
 import { ApiService } from '../../services/api.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Item } from '../../interfaces/item';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { SelectModule } from 'primeng/select';
 
 
 @Component({
@@ -37,17 +39,31 @@ import { Item } from '../../interfaces/item';
     ToastModule,
     NewBoxComponent,
     DialogModule,
-    NewItemComponent
+    NewItemComponent,
+    SelectModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
 export class DashboardComponent implements OnInit {
+  emptySelectedBox: Box = {
+    id: '',
+    labelType: 'QR',
+    lengthCm: 0,
+    widthCm: 0,
+    heightCm: 0,
+    maxWeightKg: 0,
+    location: '',
+    note: '',
+    status: 'ACTIVE'
+  };
+  displayEmptyBoxConfirm = false;
+
   displayitem = false;
 
   open1() { this.displayitem = true; }
   close1() {
-    this.getItems(); 
+    this.getItems();
     this.displayitem = false;
   }
   displaybox = false;
@@ -195,4 +211,27 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  confirmEmptyBox() {
+    this.displayEmptyBoxConfirm = true;
+  }
+
+  emptyBox() {
+    if (this.emptySelectedBox.id == '' || this.emptySelectedBox.id == undefined) {
+      this.message.add({ severity: 'error', summary: 'Hiba', detail: 'Nincs kiválasztott doboz!' });
+      return;
+    }
+
+    this.api.emptyBox(this.emptySelectedBox.id).subscribe({
+      next: (res) => {
+        this.message.add({ severity: 'info', summary: 'Sikeres ürítés', detail: 'A doboz kiürítve.' });
+        this.getBoxes();
+      },
+      error: (err) => {
+        this.message.add({ severity: 'error', summary: 'Hiba a kiürítés közben', detail: err.error.error });
+      }
+    });
+
+  }
+
 }

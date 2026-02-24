@@ -86,6 +86,10 @@ export class ApiService {
     return this.http.delete(`${this.server}/${table}`, this.tokenHeader());
   }
 
+  emptyBox(boxId: string) {
+    return this.http.delete(`${this.server}/boxitems/empty/${boxId}`, this.tokenHeader());
+  }
+
   uploadFile() { }
 
   downloadFile() { }
