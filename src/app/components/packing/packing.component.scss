@@ -170,6 +170,13 @@ $dim: #64748b;
           background: $blue; border: none; border-radius: 6px;
           font-size: 0.82rem; padding: 0.4rem 0.85rem; white-space: nowrap;
           &:hover { background: darken($blue, 8%); }
+          &.btn-blocked, &:disabled {
+            background: rgba(239,68,68,0.15) !important;
+            border: 1px solid rgba(239,68,68,0.3) !important;
+            color: $red !important;
+            cursor: not-allowed;
+            opacity: 1 !important;
+          }
         }
         .btn-clear { color: $dim !important; padding: 0.4rem !important; }
       }
@@ -277,16 +284,4 @@ $dim: #64748b;
     &.padded { padding: 2.5rem 1rem; flex-direction: column; gap: 0.4rem; i { font-size: 1.8rem; } }
     &.tall   { padding: 5rem 1rem;   flex-direction: column; gap: 0.6rem; i { font-size: 2.5rem; } }
   }
-}
-
-#background {
-    background-image: url('/background.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
-
-    /* optional fallback */
-    background-color: #f5f5f5;
 }

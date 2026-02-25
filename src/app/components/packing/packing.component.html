@@ -1,4 +1,6 @@
-<div class="packing-wrapper" id="background">
+<p-toast position="top-right"></p-toast>
+
+<div class="packing-wrapper">
 
   <div class="page-header">
     <div class="title-block">
@@ -13,7 +15,7 @@
   <div class="packing-grid">
 
     <!-- ═══ BAL: Tárgyválasztó ═══ -->
-    <div class="panel blur">
+    <div class="panel">
       <div class="panel-head">
         <span class="panel-title"><i class="pi pi-tag"></i> Tárgyak</span>
         <span class="badge">{{ allItems.length }} db</span>
@@ -60,7 +62,7 @@
     </div>
 
     <!-- ═══ KÖZÉP: Doboz nézet ═══ -->
-    <div class="panel main-panel blur">
+    <div class="panel main-panel">
       <div class="panel-head">
         <span class="panel-title"><i class="pi pi-cube"></i> Doboz tartalma</span>
         <p-dropdown
@@ -144,8 +146,12 @@
             <p-inputNumber [(ngModel)]="addQuantity" [min]="1" [max]="99"
               [showButtons]="true" styleClass="qty-input">
             </p-inputNumber>
-            <button pButton label="Hozzáadás" icon="pi pi-plus"
-              class="btn-add" (click)="addItemToBox()">
+            <button pButton icon="pi pi-plus"
+              [label]="canAdd ? 'Hozzáadás' : 'Nem fér be'"
+              [class]="'btn-add' + (canAdd ? '' : ' btn-blocked')"
+              [disabled]="!canAdd"
+              [title]="addBlockReason"
+              (click)="addItemToBox()">
             </button>
             <button pButton icon="pi pi-times"
               class="btn-clear p-button-text" (click)="selectedItem = null">
@@ -198,7 +204,7 @@
     </div>
 
     <!-- ═══ JOBB: Összesítő ═══ -->
-    <div class="panel blur">
+    <div class="panel">
       <div class="panel-head">
         <span class="panel-title"><i class="pi pi-chart-pie"></i> Összesítő</span>
       </div>

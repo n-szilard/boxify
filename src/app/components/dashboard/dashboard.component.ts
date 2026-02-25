@@ -19,6 +19,7 @@ import { ApiService } from '../../services/api.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Item } from '../../interfaces/item';
 import { SelectModule } from 'primeng/select';
+import { forkJoin } from 'rxjs';
 import { QRCodeModule } from 'angularx-qrcode';
 
 
@@ -146,23 +147,33 @@ export class DashboardComponent implements OnInit {
   }
 
   async getBoxFullness() {
-    this.boxes.forEach(box => {
-      this.api.getBoxFullness(box.id!).subscribe({
-        next: (res) => {
-          box.weightPercent = (res as any).weightPercent;
-          this.averageFullness += (res as any).weightPercent || 0;
-        },
-        error: (err) => {
-          this.message.add({
-            severity: 'error',
-            summary: 'Hiba',
-            detail: 'Hiba a doboz telítettségének lekérdezése során!'
-          })
-        }
-      });
-    });
-    this.averageFullness = this.boxes.length > 0 ? this.averageFullness / this.boxes.length : 0;
+  if (this.boxes.length === 0) {
+    this.averageFullness = 0;
+    return;
   }
+
+  const requests = this.boxes.map(box =>
+    this.api.getBoxFullness(box.id!)
+  );
+
+  forkJoin(requests).subscribe({
+    next: (results) => {
+      results.forEach((res: any, i) => {
+        this.boxes[i].weightPercent = res.weightPercent ?? 0;
+      });
+
+      const total = results.reduce((sum: number, res: any) => sum + (res.weightPercent ?? 0), 0);
+      this.averageFullness = Math.round(total / results.length);
+    },
+    error: () => {
+      this.message.add({
+        severity: 'error',
+        summary: 'Hiba',
+        detail: 'Hiba a doboz telítettségének lekérdezése során!'
+      });
+    }
+  });
+}
 
   showQRCode(boxId: string) {
     if (boxId == '' || boxId == undefined) {
