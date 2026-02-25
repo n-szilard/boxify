@@ -22,7 +22,6 @@ import { AuthService } from '../../services/auth.service';
     ButtonModule, InputTextModule, DropdownModule,
     ProgressBarModule, InputNumberModule, ToastModule
   ],
-  providers: [MessageService],
   templateUrl: './packing.component.html',
   styleUrls: ['./packing.component.scss']
 })
