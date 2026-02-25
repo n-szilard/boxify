@@ -18,8 +18,8 @@ import { Box } from '../../interfaces/box';
 import { ApiService } from '../../services/api.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { Item } from '../../interfaces/item';
-import { ConfirmDialog } from 'primeng/confirmdialog';
 import { SelectModule } from 'primeng/select';
+import { QRCodeModule } from 'angularx-qrcode';
 
 
 @Component({
@@ -40,7 +40,8 @@ import { SelectModule } from 'primeng/select';
     NewBoxComponent,
     DialogModule,
     NewItemComponent,
-    SelectModule
+    SelectModule,
+    QRCodeModule
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
@@ -62,6 +63,9 @@ export class DashboardComponent implements OnInit {
   displayitem = false;
 
   averageFullness = 0;
+
+  displayQRCode = false;
+  QRData = '';
 
   open1() { this.displayitem = true; }
   close1() {
@@ -160,11 +164,14 @@ export class DashboardComponent implements OnInit {
     this.averageFullness = this.boxes.length > 0 ? this.averageFullness / this.boxes.length : 0;
   }
 
-  editBox(boxId: string) {
-    let box = this.boxes.find(b => b.id === boxId);
-    if (box) {
-      // TODO: implement edit functionality
+  showQRCode(boxId: string) {
+    if (boxId == '' || boxId == undefined) {
+      this.message.add({ severity: 'error', summary: 'Hiba', detail: 'Nincs kiválasztott doboz!' });
+      return;
     }
+
+    this.QRData = boxId;
+    this.displayQRCode = true;
   }
 
   confirmDelete(boxId: string, event: Event) {
