@@ -12,7 +12,6 @@ import { ApiService } from '../../services/api.service';
 import { Box } from '../../interfaces/box';
 import { Item } from '../../interfaces/item';
 import { BoxItem, FillData } from '../../interfaces/boxItem';
-import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-packing',
@@ -22,6 +21,7 @@ import { AuthService } from '../../services/auth.service';
     ButtonModule, InputTextModule, DropdownModule,
     ProgressBarModule, InputNumberModule, ToastModule
   ],
+  providers: [MessageService],
   templateUrl: './packing.component.html',
   styleUrls: ['./packing.component.scss']
 })
@@ -38,17 +38,16 @@ export class PackingComponent implements OnInit {
   itemSearch = '';
   loading = false;
 
-  constructor(private api: ApiService, private msg: MessageService, private auth: AuthService) {}
+  constructor(private api: ApiService, private msg: MessageService) {}
 
   ngOnInit(): void {
-    this.api.selectByField('boxes', 'userId', 'eq', this.auth.loggedUser()!.id).subscribe({
+    this.api.selectAll('boxes').subscribe({
       next: (data: any) => {
         this.boxes = data as Box[];
         this.boxes.forEach(b => this.loadFill(b.id!));
       }
     });
-
-    this.api.selectByField('items', 'userId', 'eq', this.auth.loggedUser()!.id).subscribe({
+    this.api.selectAll('items').subscribe({
       next: (data: any) => this.allItems = data as Item[]
     });
   }
@@ -93,8 +92,46 @@ export class PackingComponent implements OnInit {
     return this.boxItems.some((bi: BoxItem) => bi.itemId === item.id);
   }
 
+  // Ellenőrzi hogy az új tárgy + mennyiség belefér-e a dobozba
+  get canAdd(): boolean {
+    if (!this.selectedBox || !this.selectedItem || !this.fill) return !!this.selectedBox && !!this.selectedItem;
+    const item = this.selectedItem;
+    const qty = this.addQuantity;
+
+    const newWeight = (this.fill.usedWeightKg ?? 0) + (item.weightKg ?? 0) * qty;
+    const newVolume = (this.fill.usedVolumeCm3 ?? 0) +
+      (item.heightCm ?? 0) * (item.widthCm ?? 0) * (item.lengthCm ?? 0) * qty;
+
+    const overWeight = this.selectedBox.maxWeightKg > 0 && newWeight > this.selectedBox.maxWeightKg;
+    const overVolume = this.fill.boxVolumeCm3 > 0 && newVolume > this.fill.boxVolumeCm3;
+
+    return !overWeight && !overVolume;
+  }
+
+  get addBlockReason(): string {
+    if (!this.selectedBox || !this.selectedItem || !this.fill) return '';
+    const item = this.selectedItem;
+    const qty = this.addQuantity;
+
+    const newWeight = (this.fill.usedWeightKg ?? 0) + (item.weightKg ?? 0) * qty;
+    const newVolume = (this.fill.usedVolumeCm3 ?? 0) +
+      (item.heightCm ?? 0) * (item.widthCm ?? 0) * (item.lengthCm ?? 0) * qty;
+
+    if (this.selectedBox.maxWeightKg > 0 && newWeight > this.selectedBox.maxWeightKg)
+      return `Túl nehéz! (+${((item.weightKg ?? 0) * qty).toFixed(1)} kg, max ${this.selectedBox.maxWeightKg} kg)`;
+    if (this.fill.boxVolumeCm3 > 0 && newVolume > this.fill.boxVolumeCm3)
+      return 'Nem fér bele! A doboz megtelt.';
+    return '';
+  }
+
   addItemToBox(): void {
     if (!this.selectedBox || !this.selectedItem) return;
+
+    if (!this.canAdd) {
+      this.toast('warn', 'Nem fér bele', this.addBlockReason);
+      return;
+    }
+
     this.api.insert('boxitems', {
       boxId: this.selectedBox.id,
       itemId: this.selectedItem.id,
@@ -113,6 +150,23 @@ export class PackingComponent implements OnInit {
 
   updateQuantity(bi: BoxItem, qty: number): void {
     if (!qty || qty < 1) return;
+    if (!this.selectedBox || !this.fill) return;
+
+    // Ellenőrzés: új qty mellett belefér-e
+    const diff = qty - bi.quantity;
+    const newWeight = (this.fill.usedWeightKg ?? 0) + (bi.item.weightKg ?? 0) * diff;
+    const newVolume = (this.fill.usedVolumeCm3 ?? 0) +
+      (bi.item.heightCm ?? 0) * (bi.item.widthCm ?? 0) * (bi.item.lengthCm ?? 0) * diff;
+
+    if (this.selectedBox.maxWeightKg > 0 && newWeight > this.selectedBox.maxWeightKg) {
+      this.toast('warn', 'Túl nehéz!', `Max súly: ${this.selectedBox.maxWeightKg} kg`);
+      return;
+    }
+    if (this.fill.boxVolumeCm3 > 0 && newVolume > this.fill.boxVolumeCm3) {
+      this.toast('warn', 'Nem fér bele!', 'A doboz megtelt.');
+      return;
+    }
+
     this.api.update('boxitems', bi.id, { quantity: qty }).subscribe({
       next: () => { bi.quantity = qty; this.loadFill(this.selectedBox!.id!); }
     });
